@@ -21,6 +21,8 @@ const mutations = {
   removeToken(state) {
     // 删除vuex的token
     state.token = null
+    // 清掉本地用户信息
+    state.userInfo = {}
     // 删除本地token
     removeToken()
   },

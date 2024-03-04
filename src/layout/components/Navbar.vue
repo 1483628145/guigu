@@ -8,7 +8,8 @@
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <!-- 头像 -->
-          <img :src="staffPhoto" class="user-avatar">
+          <img v-if="staffPhoto" :src="staffPhoto" class="user-avatar">
+          <span v-else class="defImg">{{ name.charAt(0) }}</span>
           <!-- 用户名 -->
           <span class="name"> {{ name }}</span>
           <i class="el-icon-setting" style="font-size: 16px;" />
@@ -19,13 +20,18 @@
               主页
             </el-dropdown-item>
           </router-link>
-          <!-- <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
-            <el-dropdown-item>Github</el-dropdown-item>
+          <a target="_blank" href="https://github.com/1483628145/guigu">
+            <el-dropdown-item>项目地址</el-dropdown-item>
           </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>Docs</el-dropdown-item>
-          </a> -->
-          <el-dropdown-item divided @click.native="logout">
+          <el-dropdown-item>
+            <span style="display:block;">修改密码</span>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <span style="display:block;">更换头像</span>
+          </el-dropdown-item>
+          <!-- native：注册组件的根元素的原生事件 -->
+          <!-- 当这个元素没有点击事件的时候 可以给他强加一个native就能实现绑定点击事件 -->
+          <el-dropdown-item @click.native="logout">
             <span style="display:block;">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -137,6 +143,17 @@ export default {
         .name{
           margin-right: 10px;
           font-size: 16px;
+        }
+
+        .defImg{
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          background-color: skyblue;
+          line-height: 30px;
+          text-align: center;
+          margin-right: 12px;
+          color: #fff;
         }
 
         .el-icon-caret-bottom {
