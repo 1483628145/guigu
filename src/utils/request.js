@@ -1,7 +1,8 @@
 import axios from 'axios'
 import store from '@/store'
+import { Message } from 'element-ui'
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API,
+  baseURL: '/api',
   timeout: 10000
 })
 
@@ -21,6 +22,7 @@ service.interceptors.request.use((config) => {
 service.interceptors.response.use((response) => {
   const { data, message, success } = response.data // 默认json格式
   if (success) {
+    // Message({ type: 'success', message })
     return data
   } else {
     Message({ type: 'error', message })

@@ -9,3 +9,11 @@ export function login(data) {
   })
 }
 
+// 获取用户资料
+
+export function getUserInfo() {
+  return request({
+    url: '/sys/profile',
+    method: 'get'
+  })
+}

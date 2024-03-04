@@ -37,7 +37,7 @@ export default {
       LoginForm: {
         mobile: '',
         password: '',
-        isOk: false
+        isOk: true
       },
       /* 表单校验规则 */
       LoginRules: {
@@ -89,12 +89,13 @@ export default {
     // 登录按钮
     Login() {
       // 登录之前做表单校验
-      this.$refs.form.validate((isOk) => {
+      this.$refs.form.validate(async(isOk) => {
         // 回调函数 有参数 isOk 可以拿到是否通过校验
         if (isOk) {
           // alert('pass')
           // 调用 dispath发请求
-          this.$store.dispatch('user/login', this.LoginForm)
+          await this.$store.dispatch('user/login', this.LoginForm)
+          this.$router.push('/')
         }
       })
     }
