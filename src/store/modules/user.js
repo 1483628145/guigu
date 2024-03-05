@@ -1,7 +1,7 @@
 // 用户store模块
 
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { login, getUserInfo } from '@/api/user'
+import { login, getUserInfo, updatePassword } from '@/api/user'
 import { Message } from 'element-ui'
 
 const state = {
@@ -58,6 +58,14 @@ const actions = {
     // 调用用户信息
     const userInfo = await getUserInfo()
     context.commit('setUserInfo', userInfo)
+  },
+
+  // 修改用户密码
+  async updatePassword(context, updateForm) {
+    // 发请求
+    await updatePassword(updateForm)
+    Message({ type: 'success', message: '修改成功！' })
+    context.commit('removeToken')
   }
 }
 

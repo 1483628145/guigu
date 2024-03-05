@@ -23,9 +23,10 @@
           <a target="_blank" href="https://github.com/1483628145/guigu">
             <el-dropdown-item>项目地址</el-dropdown-item>
           </a>
-          <el-dropdown-item>
-            <span style="display:block;">修改密码</span>
-          </el-dropdown-item>
+          <a @click.prevent="dialogFormVisible = true">
+            <el-dropdown-item>修改密码</el-dropdown-item>
+          </a>
+
           <el-dropdown-item>
             <span style="display:block;">更换头像</span>
           </el-dropdown-item>
@@ -37,6 +38,20 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+
+    <!-- 修改密码弹出框 -->
+    <el-dialog title="修改密码" :visible.sync="dialogFormVisible" :modal="false" width="500px" @close="cacelUpdate">
+      <el-form ref="formRef" label-width="120px" :model="updateForm" :rules="formRules">
+        <el-form-item prop="oldPassword" label="旧密码"> <el-input v-model="updateForm.oldPassword" show-password /></el-form-item>
+        <el-form-item prop="password" label="新密码"><el-input v-model="updateForm.password" show-password /></el-form-item>
+        <el-form-item prop="newPassword" label="确认你的新密码"> <el-input v-model="updateForm.newPassword" show-password /></el-form-item>
+        <!-- 提交数据 修改密码 -->
+        <el-form-item>
+          <el-button type="primary" @click="updatePassword">确认修改</el-button>
+          <el-button @click="cacelUpdate">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -49,6 +64,69 @@ export default {
   components: {
     Breadcrumb,
     Hamburger
+  },
+  data() {
+    return {
+      dialogFormVisible: false,
+      // 修改密码表格
+      updateForm: {
+        oldPassword: '',
+        password: '',
+        newPassword: ''
+      },
+      // 表单验证
+      formRules: {
+        oldPassword: [
+          // 离开焦点触发 必须输入内容
+          {
+            required: true,
+            message: '旧密码不能为空',
+            trigger: 'blur'
+          },
+          // 格式校验
+          {
+            pattern: /^.{6,16}$/,
+            message: '密码长度在6-16之间',
+            trigger: 'blur'
+          }
+        ],
+        password: [
+          // 离开焦点触发 必须输入内容
+          {
+            required: true,
+            message: '请输入新密码',
+            trigger: 'blur'
+          },
+          // 格式校验
+          {
+            pattern: /^.{6,16}$/,
+            message: '密码长度在6-16之间',
+            trigger: 'blur'
+          }
+        ],
+        newPassword: [
+          // 离开焦点触发 必须输入内容
+          {
+            required: true,
+            message: '请重复你的密码',
+            trigger: 'blur'
+          },
+          // 格式校验
+          {
+            pattern: /^.{6,16}$/,
+            message: '密码长度在6-16之间',
+            trigger: 'blur',
+            validator: (rule, value, callback) => {
+              if (this.updateForm.password === value) {
+                callback()
+              } else {
+                callback(new Error('密码俩次输入不一致！'))
+              }
+            }
+          }
+        ]
+      }
+    }
   },
   computed: {
     ...mapGetters([
@@ -66,6 +144,27 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    // 修改密码
+    updatePassword() {
+      this.$refs.formRef.validate(async(isOk) => {
+        if (isOk) {
+          this.dialogFormVisible = true
+          // 发请求修改数据
+          await this.$store.dispatch('user/updatePassword', this.updateForm)
+          // 清表单数据
+          this.$refs.formRef.resetFields()
+          // 跳转
+          this.$router.push('/login')
+        }
+      })
+    },
+    // 取消修改
+    cacelUpdate() {
+      // 关闭窗口
+      this.dialogFormVisible = false
+      // 清表单数据
+      this.$refs.formRef.resetFields()
     }
   }
 }
