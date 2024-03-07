@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import dapartment from './modules/dapartment'
+
+// 路由模块导入
+import department from './modules/department'
 import role from './modules/role'
 import employee from './modules/employee'
 import permission from './modules/permission'
@@ -62,7 +64,7 @@ export const constantRoutes = [
       meta: { title: '首页', icon: 'dashboard' }
     }]
   },
-  dapartment,
+  department,
   role,
   employee,
   permission,

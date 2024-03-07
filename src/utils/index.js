@@ -115,3 +115,18 @@ export function param2Obj(url) {
   })
   return obj
 }
+
+// 实现列表转层级结构
+export function TranListToTree(data, parentId = 0) {
+  const tree = []
+  for (const node of data) {
+    if (node.pid === parentId) {
+      const children = TranListToTree(data, node.id)
+      if (children.length > 0) {
+        node.children = children
+      }
+      tree.push(node)
+    }
+  }
+  return tree
+}
