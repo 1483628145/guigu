@@ -2,9 +2,31 @@
   <div>
     <div class="container">
       <div class="app-container">
-        <el-button size="mini" type="primary" class="addrole-but">
+        <el-button size="mini" type="primary" class="addrole-but" @click="showDiglog = true">
           添加角色
         </el-button>
+        <!-- 添加角色按钮--dialog -->
+        <el-dialog title="新增角色" :visible.sync="showDiglog" width="500px" @close="cancelAdd">
+          <el-form ref="formRef" label-width="120px" :model="formData" :rules="formRules">
+            <el-form-item prop="name" label="角色名称">
+              <el-input v-model="formData.name" style="width: 300px;" size="mini" />
+            </el-form-item>
+            <el-form-item label="启用" prop="state">
+              <el-switch v-model="formData.state" :active-value="1" :inactive-value="0" />
+            </el-form-item>
+            <el-form-item prop="description" label="角色描述">
+              <el-input v-model="formData.description" style="width: 300px;" type="textarea" />
+            </el-form-item>
+            <el-form-item>
+              <el-row type="flex" justify="center">
+                <el-col>
+                  <el-button size="mini" type="primary" @click="addRole">确认</el-button>
+                  <el-button size="mini" @click="cancelAdd">取消</el-button>
+                </el-col>
+              </el-row>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
         <!-- 表格 -->
         <el-table
           :data="list"
@@ -44,10 +66,10 @@
             label="操作"
             align="center"
           >
-            <template slot-scope="scope">
+            <template>
               <el-button type="text" size="small">分配权限</el-button>
-              <el-button type="text" size="small" @click="handleClick(scope.row)">查看</el-button>
               <el-button type="text" size="small">编辑</el-button>
+              <el-button type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -63,14 +85,13 @@
             />
           </div>
         </el-row>
-
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getRoleInfo } from '@/api/role'
+import { getRoleInfo, addRole } from '@/api/role'
 export default {
   name: 'Role',
   data() {
@@ -81,10 +102,34 @@ export default {
         page: 1,
         pagesize: 5,
         total: 50
+      },
+      showDiglog: false,
+      // 修改角色表单
+      formData: {
+        name: '',
+        description: '',
+        state: 0
+      },
+      // 表单校验
+      formRules: {
+        name: [
+          {
+            required: true,
+            message: '请输入角色名称',
+            trigger: 'blur'
+          }
+        ],
+        description: [
+          {
+            required: true,
+            message: '请输入角色描述',
+            trigger: 'blur'
+          }
+        ]
       }
-
     }
   },
+  // 生命周期 mounted 挂载时
   mounted() {
     this.getRoleInfo()
   },
@@ -99,6 +144,28 @@ export default {
     changePage(newPage) {
       this.pageParams.page = newPage
       this.getRoleInfo()
+    },
+    // 新增角色按钮
+    addRole() {
+      // 先表单校验
+      this.$refs.formRef.validate(async(isOk) => {
+        if (isOk) {
+          // 发请求新增用户
+          await addRole(this.formData)
+          this.$message.success('添加成功')
+          // 重新渲染表单
+          this.getRoleInfo()
+          // 重置表单
+          this.$refs.formRef.resetFields()
+          // 关闭弹窗
+          this.showDiglog = false
+        }
+      })
+    },
+    // 取消按钮
+    cancelAdd() {
+      this.$refs.formRef.resetFields()
+      this.showDiglog = false
     }
   }
 }

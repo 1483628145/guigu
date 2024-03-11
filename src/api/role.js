@@ -10,6 +10,15 @@ export function getRoleInfo(params) {
   })
 }
 
+// 新增角色
+export function addRole(data) {
+  return request({
+    url: '/sys/role',
+    method: 'post',
+    data
+  })
+}
+
 // 修改角色信息
 export function updateRole(id) {
   return request({
