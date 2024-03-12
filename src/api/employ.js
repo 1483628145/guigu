@@ -8,3 +8,12 @@ export function getEmployInfo(params) {
     params
   })
 }
+
+// 导出 excel
+export function exportExcel() {
+  return request({
+    url: '/sys/user/export',
+    // method: 'get',
+    responseType: 'blob'
+  })
+}

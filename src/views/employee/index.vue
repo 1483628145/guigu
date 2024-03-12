@@ -2,7 +2,15 @@
   <div class="container">
     <div class="app-container">
       <div class="left">
-        <el-input style="margin-bottom:10px" type="text" prefix-icon="el-icon-search" size="small" placeholder="输入员工姓名全员搜索" />
+        <el-input
+          v-model="queryParams.keyword"
+          style="margin-bottom:10px"
+          type="text"
+          prefix-icon="el-icon-search"
+          size="small"
+          placeholder="输入员工姓名全员搜索"
+          @input="changeValue"
+        />
         <!-- 树形组件 -->
         <el-tree
           ref="deptree"
@@ -18,15 +26,26 @@
         <el-row class="opeate-tools" type="flex" justify="end">
           <el-button size="mini" type="primary">添加员工</el-button>
           <el-button size="mini">excel导入</el-button>
-          <el-button size="mini">excel导出</el-button>
+          <el-button size="mini" @click="exportEx">excel导出</el-button>
         </el-row>
         <!-- 表格组件 -->
         <el-table :data="empolyInfo">
-          <el-table-column label="头像" prop="staffPhoto" />
+          <el-table-column label="头像" prop="staffPhoto">
+            <template v-slot="{row}">
+              <el-avatar v-if="row.staffPhoto" :src="row.staffPhoto" />
+              <el-avatar v-else icon="el-icon-user-solid" />
+            </template>
+          </el-table-column>
           <el-table-column label="姓名" prop="username" />
           <el-table-column label="手机号" prop="mobile" sortable />
           <el-table-column label="工号" prop="workNumber" sortable />
-          <el-table-column label="聘用形式" prop="formOfEmployment" />
+          <el-table-column label="聘用形式" prop="formOfEmployment">
+            <template v-slot="{row}">
+              <span v-if="row.formOfEmployment === 1 ">正式</span>
+              <span v-else-if="row.formOfEmployment === 2">非正式</span>
+              <span v-else>无</span>
+            </template>
+          </el-table-column>
           <el-table-column label="部门" prop="departmentName" />
           <el-table-column label="入职时间" prop="timeOfEntry" sortable />
           <el-table-column label="操作">
@@ -41,7 +60,10 @@
         <el-row type="flex" justify="end">
           <el-pagination
             layout="total,prev, pager, next"
-            :total="50"
+            :total="total"
+            :page-size="queryParams.pagesize"
+            :current-page="queryParams.page"
+            @current-change="changePage"
           />
         </el-row>
 
@@ -52,7 +74,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getEmployInfo } from '@/api/employ'
+import { getEmployInfo, exportExcel } from '@/api/employ'
 export default {
   name: 'Employee',
   data() {
@@ -70,7 +92,9 @@ export default {
         departmentId: 0
       },
       // 员工表格数据
-      empolyInfo: []
+      empolyInfo: [],
+      // 员工表格总数
+      total: 0
     }
   },
   computed: {
@@ -105,8 +129,31 @@ export default {
 
     // 获取员工信息
     async getEmployInfo() {
-      const { rows } = await getEmployInfo(this.queryParams)
+      const { rows, total } = await getEmployInfo(this.queryParams)
       this.empolyInfo = rows
+      this.total = total
+    },
+
+    // 分页器
+    changePage(page) {
+      this.queryParams.page = page
+      this.getEmployInfo()
+    },
+
+    // 输入框值变化
+    changeValue() {
+      /* 先清除后查询 */
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        this.queryParams.page = 1
+        this.getEmployInfo()
+      }, 300)
+    },
+
+    // 导出excel
+    async exportEx() {
+      const res = await exportExcel()
+      console.log(res)
     }
   }
 }

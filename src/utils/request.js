@@ -23,6 +23,8 @@ service.interceptors.request.use((config) => {
 
 // 响应拦截器
 service.interceptors.response.use((response) => {
+  // 二进制类型先判断
+  if (response.data instanceof Blob) return response.data
   const { data, message, success } = response.data // 默认json格式
   if (success) {
     // Message({ type: 'success', message })
