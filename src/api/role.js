@@ -20,17 +20,31 @@ export function addRole(data) {
 }
 
 // 修改角色信息
-export function updateRole(id) {
+export function updateRole(data) {
   return request({
-    url: '/sys/role/{id}',
+    url: `/sys/role/${data.id}`,
     method: 'put',
-    data: id
+    data
   })
 }
 
 // 分配权限
+export function updatePermission(data) {
+  return request({
+    url: '/sys/role/assignPrem',
+    method: 'put',
+    data
+  })
+}
 
 // 删除角色
+export function deleteRole(data) {
+  return request({
+    url: `/sys/role/${data.id}`,
+    method: 'delete',
+    data
+  })
+}
 
 // 新增角色
 

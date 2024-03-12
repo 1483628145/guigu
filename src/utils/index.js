@@ -117,16 +117,18 @@ export function param2Obj(url) {
 }
 
 // 实现列表转层级结构
-export function TranListToTree(data, parentId = 0) {
-  const tree = []
-  for (const node of data) {
-    if (node.pid === parentId) {
-      const children = TranListToTree(data, node.id)
-      if (children.length > 0) {
-        node.children = children
-      }
-      tree.push(node)
+
+export function TranListToTree(list, rootValue) {
+  const arr = []
+  list.forEach(item => {
+    if (item.pid === rootValue) {
+      // 找到了匹配的节点
+      // 当前节点的id 和 当前节点的子节点的pid是想等的
+      const children = TranListToTree(list, item.id) // 找到的节点的子节点
+      item.children = children // 将子节点赋值给当前节点
+      arr.push(item)
     }
-  }
-  return tree
+  })
+  return arr
 }
+
