@@ -21,7 +21,30 @@
           <el-button size="mini">excel导出</el-button>
         </el-row>
         <!-- 表格组件 -->
+        <el-table :data="empolyInfo">
+          <el-table-column label="头像" prop="staffPhoto" />
+          <el-table-column label="姓名" prop="username" />
+          <el-table-column label="手机号" prop="mobile" sortable />
+          <el-table-column label="工号" prop="workNumber" sortable />
+          <el-table-column label="聘用形式" prop="formOfEmployment" />
+          <el-table-column label="部门" prop="departmentName" />
+          <el-table-column label="入职时间" prop="timeOfEntry" sortable />
+          <el-table-column label="操作">
+            <template>
+              <el-button size="mini" type="text">查看</el-button>
+              <el-button size="mini" type="text">角色</el-button>
+              <el-button size="mini" type="text">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
         <!-- 分页 -->
+        <el-row type="flex" justify="end">
+          <el-pagination
+            layout="total,prev, pager, next"
+            :total="50"
+          />
+        </el-row>
+
       </div>
     </div>
   </div>
@@ -29,6 +52,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { getEmployInfo } from '@/api/employ'
 export default {
   name: 'Employee',
   data() {
@@ -41,10 +65,12 @@ export default {
       // 查询参数
       queryParams: {
         page: 1,
-        pagesize: 1,
+        pagesize: 10,
         keyword: '',
         departmentId: 0
-      }
+      },
+      // 员工表格数据
+      empolyInfo: []
     }
   },
   computed: {
@@ -54,20 +80,33 @@ export default {
   },
   created() {
     this.getdefInfo()
+    // this.getEmployInfo()
   },
   methods: {
     //  获取组织结构数据
     async getdefInfo() {
       //  发请求 拿到数据
       await this.$store.dispatch('department/getDepartInfo')
-      // 将id赋值给查询参数的departmentId
+      // 将id赋值给查询参数的departmentId 默认第一行
       this.queryParams.departmentId = this.departmentInfo[0].id
       // 拿到当前节点 然后选中第一行的数据
-      this.$refs.deptree.setCurrentKey(this.queryParams.departmentId)
+      this.$nextTick(() => {
+        this.$refs.deptree.setCurrentKey(this.queryParams.departmentId)
+      })
+      // 调用接口展现表格数据
+      this.getEmployInfo()
     },
+
     // 选中节点
     selectNode(node) {
-      this.queryParams.id = node.id
+      this.queryParams.departmentId = node.id
+      this.getEmployInfo()
+    },
+
+    // 获取员工信息
+    async getEmployInfo() {
+      const { rows } = await getEmployInfo(this.queryParams)
+      this.empolyInfo = rows
     }
   }
 }
