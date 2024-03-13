@@ -17,3 +17,20 @@ export function exportExcel() {
     responseType: 'blob'
   })
 }
+
+// 下载excel模板
+export function downExcel() {
+  return request({
+    url: '/sys/user/import/template',
+    method: 'get',
+    responseType: 'blob'
+  })
+}
+
+// 上传excel
+export function uploadExcel() {
+  return request({
+    url: '/sys/user/import',
+    method: 'post'
+  })
+}

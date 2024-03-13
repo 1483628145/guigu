@@ -25,7 +25,9 @@
       <div class="right">
         <el-row class="opeate-tools" type="flex" justify="end">
           <el-button size="mini" type="primary">添加员工</el-button>
-          <el-button size="mini">excel导入</el-button>
+          <el-button size="mini" @click="showExcel = true">excel导入</el-button>
+          <!-- 导入excel组件 -->
+          <uploadExcel :show-excel-dialog.sync="showExcel" />
           <el-button size="mini" @click="exportEx">excel导出</el-button>
         </el-row>
         <!-- 表格组件 -->
@@ -75,8 +77,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getEmployInfo, exportExcel } from '@/api/employ'
+import uploadExcel from './components/uploadExcel.vue'
 export default {
   name: 'Employee',
+  components: {
+    uploadExcel
+  },
   data() {
     return {
       // tree结构默认属性名
@@ -94,7 +100,9 @@ export default {
       // 员工表格数据
       empolyInfo: [],
       // 员工表格总数
-      total: 0
+      total: 0,
+      // 展示excel导入
+      showExcel: false
     }
   },
   computed: {
@@ -156,6 +164,7 @@ export default {
       console.log(res)
     }
   }
+
 }
 </script>
 
