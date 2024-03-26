@@ -10,9 +10,7 @@ const state = {
 const mutations = {
   // 保存组织结构信息
   setDepartInfo(state, departmentInfo) {
-    state.departmentInfo = departmentInfo
-    TranListToTree(state.departmentInfo, 0)
-    // console.log(state.departmentInfo)
+    state.departmentInfo = TranListToTree(departmentInfo, 0)
   }
 
 }

@@ -1,10 +1,9 @@
 import request from '@/utils/request'
 
 // 获取组织列表
-export function getDepartInfo(data) {
+export function getDepartInfo() {
   return request({
     url: '/company/department',
-    method: 'get',
-    data
+    method: 'get'
   })
 }

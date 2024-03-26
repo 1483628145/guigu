@@ -117,7 +117,6 @@ export function param2Obj(url) {
 }
 
 // 实现列表转层级结构
-
 export function TranListToTree(list, rootValue) {
   const arr = []
   list.forEach(item => {
@@ -125,7 +124,9 @@ export function TranListToTree(list, rootValue) {
       // 找到了匹配的节点
       // 当前节点的id 和 当前节点的子节点的pid是想等的
       const children = TranListToTree(list, item.id) // 找到的节点的子节点
-      item.children = children // 将子节点赋值给当前节点
+      if (children.length) {
+        item.children = children // 将子节点赋值给当前节点
+      }
       arr.push(item)
     }
   })

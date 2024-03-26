@@ -91,7 +91,7 @@
                 <el-button type="text" size="small">分配权限</el-button>
                 <el-button type="text" size="small" @click="edit(row)">编辑</el-button>
                 <el-popconfirm
-                  title="这是一段内容确定删除吗？"
+                  title="确定删除该角色吗？"
                   @onConfirm="deleteRole(row)"
                   @cancel="cancleEdit(row)"
                 >
@@ -120,7 +120,7 @@
 </template>
 
 <script>
-import { getRoleInfo, addRole, updateRole, deleteRole, updatePermission } from '@/api/role'
+import { getRoleInfo, addRole, updateRole, deleteRole } from '@/api/role'
 export default {
   name: 'Role',
   data() {

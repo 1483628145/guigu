@@ -10,7 +10,11 @@
             <el-input v-model="LoginForm.mobile" placeholder="请输入手机号" />
           </el-form-item>
           <el-form-item prop="password">
-            <el-input v-model="LoginForm.password" placeholder="请输入密码" show-password />
+            <el-input
+              v-model="LoginForm.password"
+              placeholder="请输入密码"
+              show-password
+            />
           </el-form-item>
           <el-form-item prop="isOk">
             <el-checkbox v-model="LoginForm.isOk">
@@ -18,7 +22,7 @@
             </el-checkbox>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" style="width: 350px;" @click="Login">
+            <el-button type="primary" style="width: 350px" @click="Login">
               登录
             </el-button>
           </el-form-item>
@@ -28,7 +32,6 @@
   </div>
 </template>
 <script>
-
 export default {
   name: 'Login',
   data() {
@@ -53,7 +56,6 @@ export default {
             pattern: /^1[3456789]\d{9}$/,
             message: '手机号格式不正确',
             trigger: 'blur'
-
           }
         ],
         password: [
@@ -154,7 +156,7 @@ export default {
       }
     }
     .el-checkbox {
-      color:#606266;
+      color: #606266;
     }
   }
 }
