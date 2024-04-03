@@ -18,7 +18,7 @@
           </el-form-item>
           <el-form-item prop="isOk">
             <el-checkbox v-model="LoginForm.isOk">
-              用户平台使用协议
+              用户平台使用协议1
             </el-checkbox>
           </el-form-item>
           <el-form-item>
